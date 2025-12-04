@@ -47,3 +47,26 @@ def parse_gff_genes(path:str)->dict:
                         'strand': strand
                     }
     return genes
+def extraer_coordenadas_upstream_downstream(genes:dict, upstream:int, downstream:int)->dict:
+    # EXTRAER COORDENADAS UPSTREAM Y DOWNSTREAM considera la hebra
+    coords = {}
+    for gene_id, info in genes.items():
+        if info['strand'] == '+':
+            up_start = max(1, info['start'] - upstream)
+            up_end = info['start'] - 1
+            down_start = info['end'] + 1
+            down_end = info['end'] + downstream
+        else:
+            up_start = info['end'] + 1
+            up_end = info['end'] + upstream
+            down_start = max(1, info['start'] - downstream)
+            down_end = info['start'] - 1
+        coords[gene_id] = {
+            'upstream': (up_start, up_end),
+            'downstream': (down_start, down_end),
+            'strand': info['strand'],
+            'seqid': info['seqid']
+        }
+    return coords
+
+def 
